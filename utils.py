@@ -1,4 +1,5 @@
 from colorama import Fore, Style
+import numpy as np
 
 
 def printd(d: dict) -> None:
@@ -145,3 +146,24 @@ def bfs(
                 queue.append((reagent_name, new_sequence, path + [reagent_name]))
 
     return None
+
+
+def index_diff(atom_index: int, exitus_index: int, length: int) -> float:
+    abs_index_diff = np.abs(atom_index - exitus_index)
+
+    return 2 * (1 - abs_index_diff / length)
+
+
+def score_reagents(reagents: dict, exitus: list[str]):
+    scores = {}
+
+    for key, value in reagents.items():
+        for i in min(range(len(value)), range(len(exitus))):
+            exitus_index = exitus.index(value[i])
+
+            if exitus_index != -1:
+                scores[key] += index_diff(i, exitus_index, len(value))
+            else:
+                scores[key] -= 1
+
+    return
