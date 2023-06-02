@@ -1,5 +1,8 @@
 from colorama import Fore, Style
 import numpy as np
+from collections import deque
+
+SCORED_REAGENTS = []
 
 
 def printd(d: dict) -> None:
@@ -49,21 +52,13 @@ def filter_useless_reagents(reagents: dict, EXITUS: list[str]) -> dict:
 
 
 def combine_reagents(reagent1: list[str], reagent2: list[str]) -> list[str]:
-    r1 = reagent1.copy()
-    r2 = reagent2.copy()
+    reagent1_set = set(reagent1)
+    reagent2_set = set(reagent2)
 
-    r1 = [atom for atom in r1 if atom[0] != "-"]
-
-    for atom in reagent1:
-        if atom in reagent2:
-            r2.remove(atom)
-
-    for atom in reagent2:
-        if atom[1:] in reagent1:
-            r1.remove(atom[1:])
-            r2.remove(atom)
-
-    r2 = [atom for atom in r2 if atom[0] != "-"]
+    r1 = [
+        atom for atom in reagent1 if atom[0] != "-" and "-" + atom not in reagent2_set
+    ]
+    r2 = [atom for atom in reagent2 if atom[0] != "-" and atom not in reagent1_set]
 
     return r1 + r2
 
@@ -127,28 +122,24 @@ def print_verbose_solution(
 def bfs(
     start_sequence: dict, reagents: dict, exitus: list[str], depth_limit=6
 ) -> list[str]:
-    queue = [
-        (start_sequence["name"], start_sequence["sequence"], [start_sequence["name"]])
-    ]
+    queue = deque(
+        [(start_sequence["name"], start_sequence["sequence"], [start_sequence["name"]])]
+    )
+
+    score_all_reagents(reagents, exitus)
 
     while queue:
-        previous_name, current_sequence, path = queue.pop(0)
-
+        previous_name, current_sequence, path = queue.popleft()
         if len(path) > depth_limit:
             break
 
         if current_sequence == exitus:
             return path
 
-        scored_reagents = [
-            (reagent_name, reagent_sequence, score_reagent(reagent_sequence, exitus))
-            for reagent_name, reagent_sequence in reagents.items()
-            if reagent_name != previous_name
-        ]
+        for reagent_name, reagent_sequence, _ in SCORED_REAGENTS:
+            if reagent_name == previous_name:
+                continue
 
-        scored_reagents.sort(key=lambda x: x[2], reverse=True)
-
-        for reagent_name, reagent_sequence, _ in scored_reagents:
             new_sequence = combine_reagents(current_sequence, reagent_sequence)
             queue.append((reagent_name, new_sequence, path + [reagent_name]))
 
@@ -158,17 +149,26 @@ def bfs(
 def index_diff(atom_index: int, exitus_index: int, exitus_length: int) -> float:
     abs_index_diff = np.abs(atom_index - exitus_index)
 
-    return 2 * (1 - abs_index_diff / exitus_length)
+    return 3 * (1 - abs_index_diff / exitus_length)
 
 
-def score_reagent(reagent: list[str], exitus: list[str]) -> dict:
-    score = 0
+def score_all_reagents(reagents: dict, exitus: list[str]) -> None:
+    for reagent_name, reagent_sequence in reagents.items():
+        score = 0
 
-    for i in range(min(len(reagent), len(exitus))):
-        try:
-            exitus_index = exitus.index(reagent[i])
-            score += index_diff(i, exitus_index, len(exitus))
-        except ValueError:
-            score -= 1
+        for i in range(min(len(reagent_sequence), len(exitus))):
+            try:
+                exitus_index = exitus.index(reagent_sequence[i])
+                score += index_diff(i, exitus_index, len(exitus))
+            except ValueError:
+                score -= 1
 
-    return score
+        SCORED_REAGENTS.append(
+            (
+                reagent_name,
+                reagent_sequence,
+                score,
+            )
+        )
+
+    SCORED_REAGENTS.sort(key=lambda x: x[2], reverse=True)
