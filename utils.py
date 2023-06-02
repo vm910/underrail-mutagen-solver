@@ -113,7 +113,7 @@ def print_verbose_solution(
         colored_reagent1, colored_reagent2 = color_eliminated_atoms(
             compound, reagents[solution[i]]
         )
-        print(f" {i}.\t{' '.join(map(str, colored_reagent1))}")
+        print(f" {i}.\t  {' '.join(map(str, colored_reagent1))}")
         print(f"\t+ {' '.join(map(str, colored_reagent2))}")
 
         compound = combine_reagents(compound, reagents[solution[i]])
