@@ -154,7 +154,7 @@ def index_diff(atom_index: int, exitus_index: int, length: int) -> float:
     return 2 * (1 - abs_index_diff / length)
 
 
-def score_reagents(reagents: dict, exitus: list[str]):
+def score_reagents(reagents: dict, exitus: list[str]) -> dict:
     scores = {}
 
     for key, value in reagents.items():
@@ -166,4 +166,4 @@ def score_reagents(reagents: dict, exitus: list[str]):
             else:
                 scores[key] -= 1
 
-    return
+    return scores
