@@ -110,7 +110,9 @@ if __name__ == "__main__":
                     logger.error(f"{key} generated an exception: {exc}")
                 else:
                     if path is not None:
-                        logger.info(f"Solution found for starter node {key}: {path}")
+                        logger.info(
+                            f"Solution found for starter node {key}: [{' '.join(map(str, path))}]"
+                        )
                         if args.verbose:
                             logger.info("Step by step:")
                             print_verbose_solution(reagents, path, EXITUS)
@@ -131,7 +133,7 @@ if __name__ == "__main__":
                         logger.warning(f"No solution found for starter node {key}")
                     else:
                         logger.info(
-                            f"Solution found for starter node {key}: {', '.join(map(str, path))}"
+                            f"Solution found for starter node {key}: [{', '.join(map(str, path))}]"
                         )
                         if args.verbose:
                             logger.info("Step by step:")
