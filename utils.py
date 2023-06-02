@@ -140,30 +140,35 @@ def bfs(
         if current_sequence == exitus:
             return path
 
-        for reagent_name, reagent_sequence in reagents.items():
-            if reagent_name != previous_name:
-                new_sequence = combine_reagents(current_sequence, reagent_sequence)
-                queue.append((reagent_name, new_sequence, path + [reagent_name]))
+        scored_reagents = [
+            (reagent_name, reagent_sequence, score_reagent(reagent_sequence, exitus))
+            for reagent_name, reagent_sequence in reagents.items()
+            if reagent_name != previous_name
+        ]
+
+        scored_reagents.sort(key=lambda x: x[2], reverse=True)
+
+        for reagent_name, reagent_sequence, _ in scored_reagents:
+            new_sequence = combine_reagents(current_sequence, reagent_sequence)
+            queue.append((reagent_name, new_sequence, path + [reagent_name]))
 
     return None
 
 
-def index_diff(atom_index: int, exitus_index: int, length: int) -> float:
+def index_diff(atom_index: int, exitus_index: int, exitus_length: int) -> float:
     abs_index_diff = np.abs(atom_index - exitus_index)
 
-    return 2 * (1 - abs_index_diff / length)
+    return 2 * (1 - abs_index_diff / exitus_length)
 
 
-def score_reagents(reagents: dict, exitus: list[str]) -> dict:
-    scores = {}
+def score_reagent(reagent: list[str], exitus: list[str]) -> dict:
+    score = 0
 
-    for key, value in reagents.items():
-        for i in min(range(len(value)), range(len(exitus))):
-            exitus_index = exitus.index(value[i])
+    for i in range(min(len(reagent), len(exitus))):
+        try:
+            exitus_index = exitus.index(reagent[i])
+            score += index_diff(i, exitus_index, len(exitus))
+        except ValueError:
+            score -= 1
 
-            if exitus_index != -1:
-                scores[key] += index_diff(i, exitus_index, len(value))
-            else:
-                scores[key] -= 1
-
-    return scores
+    return score
