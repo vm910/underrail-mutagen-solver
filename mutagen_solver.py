@@ -74,6 +74,13 @@ if __name__ == "__main__":
 
     logger.info("Parsing reagents...")
     reagents, EXITUS = parse_reagents(args.reagents)
+
+    try:
+        validate_reagents(reagents, EXITUS)
+    except ValueError as e:
+        logger.error(e)
+        exit(1)
+
     if args.debug:
         logger.debug("Reagents:")
         printd(reagents)

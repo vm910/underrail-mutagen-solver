@@ -119,6 +119,14 @@ def print_verbose_solution(
         print("\n")
 
 
+def validate_reagents(reagents: dict, exitus: list[str]) -> None:
+    atom_pool = set(flatten(list(reagents.values())))
+
+    for atom in exitus:
+        if atom not in atom_pool:
+            raise ValueError(f"Atom {atom} not found in reagents")
+
+
 def bfs(
     start_sequence: dict, reagents: dict, exitus: list[str], depth_limit=6
 ) -> list[str]:
