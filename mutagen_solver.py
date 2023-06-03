@@ -86,6 +86,8 @@ if __name__ == "__main__":
         exit(1)
 
     if args.debug:
+        logger.debug("Exitus:")
+        print(f'\t{" ".join(map(str, EXITUS))}')
         logger.debug("Reagents:")
         printd(reagents)
 
@@ -103,7 +105,7 @@ if __name__ == "__main__":
         else:
             start = {"name": args.start, "sequence": filtered_reagents[args.start]}
             logger.info(f"Starting from {args.start}")
-            path = bfs(start, filtered_reagents, EXITUS, args.depth)
+            path = bfs(start, filtered_reagents, EXITUS, args.depth, True)
             if path is None:
                 logger.warning(f"No solution found for starter node {args.start}")
             else:

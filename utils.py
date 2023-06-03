@@ -138,7 +138,7 @@ def bfs(
                 [start_sequence["name"]],
             )
         ],
-        maxlen=5000000 if manual else 2000000,
+        maxlen=10000000 if manual else 2000000,
     )
 
     score_all_reagents(reagents, exitus)
@@ -147,9 +147,6 @@ def bfs(
         previous_name, current_sequence, path = queue.popleft()
         if len(path) > depth_limit:
             break
-
-        if current_sequence == exitus:
-            return path
 
         for reagent_name, reagent_sequence, _ in SCORED_REAGENTS:
             if reagent_name == previous_name:
