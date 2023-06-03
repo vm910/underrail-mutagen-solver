@@ -65,6 +65,10 @@ if __name__ == "__main__":
         help="If set, a step by step of the combinations will be printed out.",
     )
 
+    parser.add_argument(
+        "--start", type=str, help="The starting node for the BFS.", required=False
+    )
+
     args = parser.parse_args()
 
     logging_level = logging.DEBUG if args.debug else logging.INFO
@@ -92,56 +96,74 @@ if __name__ == "__main__":
         printd(filtered_reagents)
 
     logger.info("Searching...")
-    with concurrent.futures.ProcessPoolExecutor() as executor:
-        future_to_sequence = {
-            executor.submit(
-                bfs,
-                {"name": key, "sequence": value},
-                filtered_reagents,
-                EXITUS,
-                args.depth,
-            ): key
-            for key, value in filtered_reagents.items()
-        }
-
-        if args.first:
-            done, not_done = concurrent.futures.wait(
-                future_to_sequence, return_when=concurrent.futures.FIRST_COMPLETED
-            )
-
-            for future in done:
-                key = future_to_sequence[future]
-                try:
-                    path = future.result()
-                except Exception as exc:
-                    logger.error(f"{key} generated an exception: {exc}")
-                else:
-                    if path is not None:
-                        logger.info(
-                            f"Solution found for starter node {key}: [{' '.join(map(str, path))}]"
-                        )
-                        if args.verbose:
-                            logger.info("Step by step:")
-                            print_verbose_solution(reagents, path, EXITUS)
-                        logger.info("Exiting...")
-                        for future in not_done:
-                            logger.info(f"Cancelling {future_to_sequence[future]}")
-                            future.cancel()
-                        break
+    if args.start:
+        if args.start not in filtered_reagents:
+            logger.error(f"Starter node {args.start} not found in reagents")
+            exit(1)
         else:
-            for future in concurrent.futures.as_completed(future_to_sequence):
-                key = future_to_sequence[future]
-                try:
-                    path = future.result()
-                except Exception as exc:
-                    logger.error(f"{key} generated an exception: {exc}")
-                else:
-                    if path is None:
-                        logger.warning(f"No solution found for starter node {key}")
+            start = {"name": args.start, "sequence": filtered_reagents[args.start]}
+            logger.info(f"Starting from {args.start}")
+            path = bfs(start, filtered_reagents, EXITUS, args.depth)
+            if path is None:
+                logger.warning(f"No solution found for starter node {args.start}")
+            else:
+                logger.info(
+                    f"Solution found for starter node {args.start}: [{' '.join(map(str, path))}]"
+                )
+                if args.verbose:
+                    logger.info("Step by step:")
+                    print_verbose_solution(reagents, path, EXITUS)
+    else:
+        with concurrent.futures.ProcessPoolExecutor() as executor:
+            future_to_sequence = {
+                executor.submit(
+                    bfs,
+                    {"name": key, "sequence": value},
+                    filtered_reagents,
+                    EXITUS,
+                    args.depth,
+                ): key
+                for key, value in filtered_reagents.items()
+            }
+
+            if args.first:
+                done, not_done = concurrent.futures.wait(
+                    future_to_sequence, return_when=concurrent.futures.FIRST_COMPLETED
+                )
+
+                for future in done:
+                    key = future_to_sequence[future]
+                    try:
+                        path = future.result()
+                    except Exception as exc:
+                        logger.error(f"{key} generated an exception: {exc}")
                     else:
-                        logger.info(
-                            f"Solution found for starter node {key}: [{', '.join(map(str, path))}]"
-                        )
-                        if args.verbose:
-                            logger.info("Step by step:")
-                            print_verbose_solution(reagents, path, EXITUS)
+                        if path is not None:
+                            logger.info(
+                                f"Solution found for starter node {key}: [{' '.join(map(str, path))}]"
+                            )
+                            if args.verbose:
+                                logger.info("Step by step:")
+                                print_verbose_solution(reagents, path, EXITUS)
+                            logger.info("Exiting...")
+                            for future in not_done:
+                                logger.info(f"Cancelling {future_to_sequence[future]}")
+                                future.cancel()
+                            break
+            else:
+                for future in concurrent.futures.as_completed(future_to_sequence):
+                    key = future_to_sequence[future]
+                    try:
+                        path = future.result()
+                    except Exception as exc:
+                        logger.error(f"{key} generated an exception: {exc}")
+                    else:
+                        if path is None:
+                            logger.warning(f"No solution found for starter node {key}")
+                        else:
+                            logger.info(
+                                f"Solution found for starter node {key}: [{', '.join(map(str, path))}]"
+                            )
+                            if args.verbose:
+                                logger.info("Step by step:")
+                                print_verbose_solution(reagents, path, EXITUS)

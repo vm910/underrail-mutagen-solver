@@ -128,10 +128,17 @@ def validate_reagents(reagents: dict, exitus: list[str]) -> None:
 
 
 def bfs(
-    start_sequence: dict, reagents: dict, exitus: list[str], depth_limit=6
+    start_sequence: dict, reagents: dict, exitus: list[str], depth_limit=6, manual=False
 ) -> list[str]:
     queue = deque(
-        [(start_sequence["name"], start_sequence["sequence"], [start_sequence["name"]])]
+        [
+            (
+                start_sequence["name"],
+                start_sequence["sequence"],
+                [start_sequence["name"]],
+            )
+        ],
+        maxlen=5000000 if manual else 2000000,
     )
 
     score_all_reagents(reagents, exitus)
@@ -150,6 +157,9 @@ def bfs(
 
             new_sequence = combine_reagents(current_sequence, reagent_sequence)
             queue.append((reagent_name, new_sequence, path + [reagent_name]))
+
+            if new_sequence == exitus:
+                return path + [reagent_name]
 
     return None
 
