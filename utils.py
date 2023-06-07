@@ -128,7 +128,7 @@ def validate_reagents(reagents: dict, exitus: list[str]) -> None:
 
 
 def bfs(
-    start_sequence: dict, reagents: dict, exitus: list[str], depth_limit=6, manual=False
+    start_sequence: dict, reagents: dict, exitus: list[str], depth_limit=6
 ) -> list[str]:
     queue = deque(
         [
@@ -138,14 +138,13 @@ def bfs(
                 [start_sequence["name"]],
             )
         ],
-        maxlen=10000000 if manual else 2000000,
     )
 
     score_all_reagents(reagents, exitus)
 
     while queue:
         previous_name, current_sequence, path = queue.popleft()
-        if len(path) > depth_limit:
+        if len(path) >= depth_limit:
             break
 
         for reagent_name, reagent_sequence, _ in SCORED_REAGENTS:
@@ -160,6 +159,13 @@ def bfs(
 
     return None
 
+
+def get_viable_start_reagents(reagents: dict, exitus: list[str]) -> dict:
+    return {
+        reagent_name: reagent_sequence
+        for reagent_name, reagent_sequence in reagents.items()
+        if exitus[0] in reagent_sequence
+    }    
 
 def index_diff(atom_index: int, exitus_index: int, exitus_length: int) -> float:
     abs_index_diff = np.abs(atom_index - exitus_index)

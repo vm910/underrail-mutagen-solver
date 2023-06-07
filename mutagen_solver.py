@@ -93,6 +93,7 @@ if __name__ == "__main__":
 
     logger.info("Filtering useless reagents...")
     filtered_reagents = filter_useless_reagents(reagents, EXITUS)
+    viable_start_reagents = get_viable_start_reagents(filtered_reagents, EXITUS)
     if args.debug:
         logger.debug("Useful reagents:")
         printd(filtered_reagents)
@@ -105,7 +106,7 @@ if __name__ == "__main__":
         else:
             start = {"name": args.start, "sequence": filtered_reagents[args.start]}
             logger.info(f"Starting from {args.start}")
-            path = bfs(start, filtered_reagents, EXITUS, args.depth, True)
+            path = bfs(start, filtered_reagents, EXITUS, args.depth)
             if path is None:
                 logger.warning(f"No solution found for starter node {args.start}")
             else:
@@ -125,7 +126,7 @@ if __name__ == "__main__":
                     EXITUS,
                     args.depth,
                 ): key
-                for key, value in filtered_reagents.items()
+                for key, value in viable_start_reagents.items()
             }
 
             if args.first:
