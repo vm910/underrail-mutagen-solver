@@ -76,8 +76,6 @@ def color_eliminated_atoms(reagent1: list[str], reagent2: list[str]):
     for atom in reagent2:
         if atom[1:] in reagent1:
             color_values2.append(f"{Fore.RED}{atom}{Style.RESET_ALL}")
-        elif atom in reagent1:
-            color_values2.append(atom)
         elif atom[0] != "-":
             color_values2.append(f"{Fore.CYAN}{atom}{Style.RESET_ALL}")
         else:
@@ -161,11 +159,26 @@ def bfs(
 
 
 def get_viable_start_reagents(reagents: dict, exitus: list[str]) -> dict:
-    return {
-        reagent_name: reagent_sequence
-        for reagent_name, reagent_sequence in reagents.items()
-        if exitus[0] in reagent_sequence
-    }    
+    max_score = 0
+    viable_starts = {}
+
+    for reagent_name, reagent_sequence in reagents.items():
+        score = 0
+        i = 0
+
+        while exitus[i] in reagent_sequence:
+            score += 1
+            i += 1
+
+        if score > max_score:
+            max_score = score
+            viable_starts = {reagent_name: reagent_sequence}
+        elif score == max_score:
+            viable_starts[reagent_name] = reagent_sequence
+
+
+    return viable_starts
+
 
 def index_diff(atom_index: int, exitus_index: int, exitus_length: int) -> float:
     abs_index_diff = np.abs(atom_index - exitus_index)
