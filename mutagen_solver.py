@@ -98,6 +98,7 @@ if __name__ == "__main__":
         logger.debug("Useful reagents:")
         printd(filtered_reagents)
 
+    scored_reagents = score_all_reagents(filtered_reagents, EXITUS)
     logger.info("Searching...")
     if args.start:
         if args.start not in filtered_reagents:
@@ -122,7 +123,7 @@ if __name__ == "__main__":
                 executor.submit(
                     bfs,
                     {"name": key, "sequence": value},
-                    filtered_reagents,
+                    scored_reagents,
                     EXITUS,
                     args.depth,
                 ): key

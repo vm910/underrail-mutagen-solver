@@ -1,8 +1,6 @@
 from colorama import Fore, Style
-import numpy as np
 from collections import deque
-
-SCORED_REAGENTS = []
+import numpy as np
 
 
 def printd(d: dict) -> None:
@@ -128,7 +126,7 @@ def validate_reagents(reagents: dict, exitus: list[str]) -> None:
 
 
 def bfs(
-    start_sequence: dict, reagents: dict, exitus: list[str], depth_limit=6
+    start_sequence: dict, reagents: list[tuple], exitus: list[str], depth_limit=6
 ) -> list[str]:
     queue = deque(
         [
@@ -140,19 +138,12 @@ def bfs(
         ],
     )
 
-    score_all_reagents(reagents, exitus)
-    scored_without_start_sequence = [
-        (name, sequence)
-        for name, sequence, _ in SCORED_REAGENTS
-        if name != start_sequence["name"]
-    ]
-
     while queue:
         previous_name, current_sequence, path = queue.popleft()
         if len(path) >= depth_limit:
             break
 
-        for reagent_name, reagent_sequence in scored_without_start_sequence:
+        for reagent_name, reagent_sequence, _ in reagents:
             if reagent_name == previous_name:
                 continue
 
@@ -192,7 +183,9 @@ def index_diff(atom_index: int, exitus_index: int, exitus_length: int) -> float:
     return 3 * (1 - abs_index_diff / exitus_length)
 
 
-def score_all_reagents(reagents: dict, exitus: list[str]) -> None:
+def score_all_reagents(reagents: dict, exitus: list[str]) -> list[tuple]:
+    scored_reagents = []
+
     for reagent_name, reagent_sequence in reagents.items():
         score = 0
 
@@ -203,7 +196,7 @@ def score_all_reagents(reagents: dict, exitus: list[str]) -> None:
             except ValueError:
                 score -= 1
 
-        SCORED_REAGENTS.append(
+        scored_reagents.append(
             (
                 reagent_name,
                 reagent_sequence,
@@ -211,4 +204,6 @@ def score_all_reagents(reagents: dict, exitus: list[str]) -> None:
             )
         )
 
-    SCORED_REAGENTS.sort(key=lambda x: x[2], reverse=True)
+    scored_reagents.sort(key=lambda x: x[2], reverse=True)
+
+    return scored_reagents
