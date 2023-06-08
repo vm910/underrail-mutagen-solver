@@ -35,12 +35,14 @@ def parse_reagents(path: str) -> dict:
 def filter_useless_reagents(reagents: dict, EXITUS: list[str]) -> dict:
     while True:
         reagents_c = reagents.copy()
+        atom_pool = set(flatten(list(reagents_c.values())))
+
         for key, reagent in reagents_c.items():
             for atom in reagent:
                 if (
                     atom[0] != "-"
                     and atom not in EXITUS
-                    and "-" + atom not in flatten(list(reagents_c.values()))
+                    and "-" + atom not in atom_pool
                     and key in reagents
                 ):
                     reagents.pop(key)
@@ -139,13 +141,18 @@ def bfs(
     )
 
     score_all_reagents(reagents, exitus)
+    scored_without_start_sequence = [
+        (name, sequence)
+        for name, sequence, _ in SCORED_REAGENTS
+        if name != start_sequence["name"]
+    ]
 
     while queue:
         previous_name, current_sequence, path = queue.popleft()
         if len(path) >= depth_limit:
             break
 
-        for reagent_name, reagent_sequence, _ in SCORED_REAGENTS:
+        for reagent_name, reagent_sequence in scored_without_start_sequence:
             if reagent_name == previous_name:
                 continue
 
@@ -175,7 +182,6 @@ def get_viable_start_reagents(reagents: dict, exitus: list[str]) -> dict:
             viable_starts = {reagent_name: reagent_sequence}
         elif score == max_score:
             viable_starts[reagent_name] = reagent_sequence
-
 
     return viable_starts
 
