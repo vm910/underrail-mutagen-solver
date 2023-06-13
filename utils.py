@@ -76,9 +76,9 @@ def color_eliminated_atoms(reagent1: list[str], reagent2: list[str]):
     for atom in reagent2:
         if atom[1:] in reagent1:
             color_values2.append(f"{Fore.RED}{atom}{Style.RESET_ALL}")
-        elif atom[0] != "-":
+        elif atom[0] != "-" and atom not in reagent1:
             color_values2.append(f"{Fore.CYAN}{atom}{Style.RESET_ALL}")
-        else:
+        elif atom in reagent1:
             color_values2.append(atom)
 
     return color_values1, color_values2
