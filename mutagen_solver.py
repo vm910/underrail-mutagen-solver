@@ -92,7 +92,9 @@ if __name__ == "__main__":
         printd(reagents)
 
     logger.info("Filtering useless reagents...")
-    filtered_reagents = filter_useless_reagents(reagents, EXITUS)
+    filtered_reagents, removed_reagents = filter_useless_reagents(reagents, EXITUS)
+    logger.info(f'Removed {removed_reagents}')
+
     viable_start_reagents = get_viable_start_reagents(filtered_reagents, EXITUS)
     if args.debug:
         logger.debug("Useful reagents:")

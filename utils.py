@@ -31,6 +31,8 @@ def parse_reagents(path: str) -> dict:
 
 
 def filter_useless_reagents(reagents: dict, EXITUS: list[str]) -> dict:
+    removed_reagents = []
+
     while True:
         reagents_c = reagents.copy()
         atom_pool = set(flatten(list(reagents_c.values())))
@@ -44,11 +46,12 @@ def filter_useless_reagents(reagents: dict, EXITUS: list[str]) -> dict:
                     and key in reagents
                 ):
                     reagents.pop(key)
+                    removed_reagents.append(key)
                     break
         if reagents == reagents_c:
             break
 
-    return reagents
+    return reagents, removed_reagents
 
 
 def combine_reagents(reagent1: list[str], reagent2: list[str]) -> list[str]:
