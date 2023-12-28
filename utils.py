@@ -1,6 +1,7 @@
 from colorama import Fore, Style
 from collections import deque
 import numpy as np
+import heapq
 
 
 def printd(d: dict) -> None:
@@ -81,7 +82,7 @@ def color_eliminated_atoms(reagent1: list[str], reagent2: list[str]):
             color_values2.append(f"{Fore.RED}{atom}{Style.RESET_ALL}")
         elif atom[0] != "-" and atom not in reagent1:
             color_values2.append(f"{Fore.CYAN}{atom}{Style.RESET_ALL}")
-        elif atom in reagent1:
+        else:
             color_values2.append(atom)
 
     return color_values1, color_values2
@@ -125,11 +126,62 @@ def validate_reagents(reagents: dict, exitus: list[str]) -> None:
 
     for atom in exitus:
         if atom not in atom_pool:
-            raise ValueError(f"Atom {atom} not found in reagents")
+            raise ValueError(f"Exitus atom {atom} not found in reagents")
 
+def heuristic(current_sequence, target_sequence, depth):
+    score = 0.0
+    index_c = 0
+
+    for i, atom in enumerate(current_sequence):
+        target_index = i - index_c
+        if len(target_sequence) >= i and atom == target_sequence[target_index]:
+            score += 3 / depth
+        else:
+            score -= 1 * depth
+            index_c += 1
+
+    return score
+
+def priority_search(
+    start_sequence: dict, reagents, exitus: list[str], depth_limit=6
+) -> list[str]:
+    p_queue = []
+
+    heapq.heappush(
+        p_queue,
+        (
+            -heuristic(start_sequence["sequence"], exitus, len([start_sequence["name"]])),
+            start_sequence["name"], 
+            start_sequence["sequence"],
+            [],
+            [start_sequence["name"]]
+        )
+    )
+
+    while p_queue:
+        priority, previous_name, current_sequence, previous_sequence, path = heapq.heappop(p_queue)
+        
+        # print(f'{priority}, {path}')
+        # print(' '.join(map(str, exitus_difference(current_sequence, exitus))))
+        if len(path) >= depth_limit:
+            break
+
+        for reagent_name, reagent_sequence, _ in reagents:
+            if reagent_name == previous_name or current_sequence == previous_sequence:
+                continue
+
+            new_sequence = combine_reagents(current_sequence, reagent_sequence)
+     
+            if new_sequence == exitus:
+                return path + [reagent_name]
+            else:
+                new_priority = heuristic(new_sequence, exitus, len(path + [reagent_name]))
+                heapq.heappush(p_queue, (-new_priority, reagent_name, new_sequence, current_sequence, path + [reagent_name]))
+
+    return None  
 
 def bfs(
-    start_sequence: dict, reagents: list[tuple], exitus: list[str], depth_limit=6
+    start_sequence: dict, reagents, exitus: list[str], depth_limit=6
 ) -> list[str]:
     queue = deque(
         [
@@ -142,7 +194,8 @@ def bfs(
     )
 
     while queue:
-        previous_name, current_sequence, path = queue.popleft()
+        previous_name, current_sequence, path = queue.popleft();
+
         if len(path) >= depth_limit:
             break
 
@@ -151,10 +204,11 @@ def bfs(
                 continue
 
             new_sequence = combine_reagents(current_sequence, reagent_sequence)
-            queue.append((reagent_name, new_sequence, path + [reagent_name]))
 
             if new_sequence == exitus:
                 return path + [reagent_name]
+            else:
+                queue.append((reagent_name, new_sequence, path + [reagent_name]))
 
     return None
 
