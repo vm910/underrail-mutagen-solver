@@ -107,18 +107,23 @@ def print_verbose_solution(
 ) -> None:
     compound = [atom for atom in reagents[solution[0]] if atom[0] != "-"]
 
-    for i in range(1, len(solution)):
-        colored_reagent1, colored_reagent2 = color_eliminated_atoms(
-            compound, reagents[solution[i]]
-        )
-        print(f" {i}.\t  {' '.join(map(str, colored_reagent1))}")
-        print(f"\t+ {' '.join(map(str, colored_reagent2))}")
+    for i in range(0, len(solution)):
+        if i == 0:
+            print(f" {i}.\t  {' '.join(map(str, exitus_difference(compound, exitus)))}")
+            print(f"\t  {' '.join(map(str, exitus))}")
+            print()
+        else:
+            colored_reagent1, colored_reagent2 = color_eliminated_atoms(
+                compound, reagents[solution[i]]
+            )
+            print(f" {i}.\t  {' '.join(map(str, colored_reagent1))}")
+            print(f"\t+ {' '.join(map(str, colored_reagent2))}")
 
-        compound = combine_reagents(compound, reagents[solution[i]])
+            compound = combine_reagents(compound, reagents[solution[i]])
 
-        print(f"\t= {' '.join(map(str, exitus_difference(compound, exitus)))}")
-        print(f"\t  {' '.join(map(str, exitus))}")
-        print("\n")
+            print(f"\t= {' '.join(map(str, exitus_difference(compound, exitus)))}")
+            print(f"\t  {' '.join(map(str, exitus))}")
+            print()
 
 
 def validate_reagents(reagents: dict, exitus: list[str]) -> None:
@@ -128,7 +133,7 @@ def validate_reagents(reagents: dict, exitus: list[str]) -> None:
         if atom not in atom_pool:
             raise ValueError(f"Exitus atom {atom} not found in reagents")
 
-def heuristic(current_sequence, target_sequence, depth):
+def heuristic(current_sequence: list[str], target_sequence: list[str], depth: int) -> float:
     score = 0.0
     index_c = 0
 
@@ -143,14 +148,14 @@ def heuristic(current_sequence, target_sequence, depth):
     return score
 
 def priority_search(
-    start_sequence: dict, reagents, exitus: list[str], depth_limit=6
+    start_sequence: dict, reagents, exitus: list[str], depth_limit=15
 ) -> list[str]:
     p_queue = []
 
     heapq.heappush(
         p_queue,
         (
-            -heuristic(start_sequence["sequence"], exitus, len([start_sequence["name"]])),
+            -heuristic(start_sequence["sequence"], exitus, 1),
             start_sequence["name"], 
             start_sequence["sequence"],
             [],
@@ -160,13 +165,11 @@ def priority_search(
 
     while p_queue:
         priority, previous_name, current_sequence, previous_sequence, path = heapq.heappop(p_queue)
-        
-        # print(f'{priority}, {path}')
-        # print(' '.join(map(str, exitus_difference(current_sequence, exitus))))
+
         if len(path) >= depth_limit:
             break
 
-        for reagent_name, reagent_sequence, _ in reagents:
+        for reagent_name, reagent_sequence in reagents.items():
             if reagent_name == previous_name or current_sequence == previous_sequence:
                 continue
 

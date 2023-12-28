@@ -39,8 +39,8 @@ if __name__ == "__main__":
         "--depth",
         type=int,
         dest="depth",
-        help="Depth limit for the BFS.",
-        default=6,
+        help="Depth limit for the search.",
+        default=15,
         required=False,
     )
 
@@ -113,7 +113,7 @@ if __name__ == "__main__":
        
         start = {"name": args.start, "sequence": filtered_reagents[args.start]}
         logger.info(f"Starting from {args.start}")
-        path = bfs(start, filtered_reagents, EXITUS, args.depth)
+        path = priority_search(start, filtered_reagents, EXITUS, args.depth)
         if path is None:
             logger.warning(f"No solution found for starter node {args.start}")
         else:
@@ -129,7 +129,7 @@ if __name__ == "__main__":
                 executor.submit(
                     priority_search,
                     {"name": key, "sequence": value},
-                    scored_reagents,
+                    filtered_reagents,
                     EXITUS,
                     args.depth,
                 ): key
