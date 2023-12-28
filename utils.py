@@ -235,35 +235,3 @@ def get_viable_start_reagents(reagents: dict, exitus: list[str]) -> dict:
             viable_starts[reagent_name] = reagent_sequence
 
     return viable_starts
-
-
-def index_diff(atom_index: int, exitus_index: int, exitus_length: int) -> float:
-    abs_index_diff = np.abs(atom_index - exitus_index)
-
-    return 3 * (1 - abs_index_diff / exitus_length)
-
-
-def score_all_reagents(reagents: dict, exitus: list[str]) -> list[tuple]:
-    scored_reagents = []
-
-    for reagent_name, reagent_sequence in reagents.items():
-        score = 0
-
-        for i in range(min(len(reagent_sequence), len(exitus))):
-            try:
-                exitus_index = exitus.index(reagent_sequence[i])
-                score += index_diff(i, exitus_index, len(exitus))
-            except ValueError:
-                score -= 1
-
-        scored_reagents.append(
-            (
-                reagent_name,
-                reagent_sequence,
-                score,
-            )
-        )
-
-    scored_reagents.sort(key=lambda x: x[2], reverse=True)
-
-    return scored_reagents

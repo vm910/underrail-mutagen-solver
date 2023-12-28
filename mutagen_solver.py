@@ -104,7 +104,6 @@ if __name__ == "__main__":
         logger.debug("Useful reagents:")
         printd(filtered_reagents)
 
-    scored_reagents = score_all_reagents(filtered_reagents, EXITUS)
     logger.info("Searching...")
     if args.start:
         if args.start not in filtered_reagents:
@@ -134,7 +133,6 @@ if __name__ == "__main__":
                     args.depth,
                 ): key
                 for key, value in viable_start_reagents.items()
-                # for key, value, _ in scored_reagents[:4]
             }
 
             if args.first:
