@@ -1,6 +1,6 @@
 # MUTAGEN PUZZLE SOLVER
 
-This solver is a CLI tool designed for quickly and efficiently solving the [mutagen puzzle in Underrail](https://www.stygiansoftware.com/wiki/index.php?title=Mutagen_Puzzle). It started out as a simple breadth-first search approach that worked relatively well but would take more than 25 seconds on some examples so I decided to make it a bit smarter.
+This solver is a CLI tool designed for quickly and efficiently solving the [mutagen puzzle in Underrail](https://www.stygiansoftware.com/wiki/index.php?title=Mutagen_Puzzle). It started out as a simple breadth-first search that worked relatively well but would take more than 25 seconds on some examples so I decided to make it a bit smarter.
 
 ## Requirements
 
