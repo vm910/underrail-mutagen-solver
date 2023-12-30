@@ -148,7 +148,7 @@ def heuristic(current_sequence: list[str], target_sequence: list[str], depth: in
     return score
 
 def priority_search(
-    start_sequence: dict, reagents, exitus: list[str], depth_limit=12
+    start_sequence: dict, reagents: dict, exitus: list[str], depth_limit: int = 15
 ) -> list[str]:
     p_queue = []
 
@@ -197,7 +197,7 @@ def bfs(
                 start_sequence["sequence"],
                 [start_sequence["name"]],
             )
-        ],
+        ],error
     )
 
     while queue:
