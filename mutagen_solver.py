@@ -31,7 +31,6 @@ if __name__ == "__main__":
         type=str,
         dest="reagents",
         help="Path to the reagents file.",
-        default="reagents.txt",
         required=True,
     )
 
@@ -68,11 +67,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--start", type=str, help="The starting node for the BFS.", required=False
     )
-
-    parser.add_argument(
-        "--method", type=str, dest="search_method", help="Search method (BFS or Priority)", required=False, default="bfs"
-    )
-
+    
     args = parser.parse_args()
 
     logging_level = logging.DEBUG if args.debug else logging.INFO

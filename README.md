@@ -7,7 +7,6 @@ This solver is a CLI tool designed for quickly and efficiently solving the [muta
 - Python 3
     - colorlog
     - colorama
-    - numpy
 
 ## Installation
 
@@ -18,7 +17,7 @@ This solver is a CLI tool designed for quickly and efficiently solving the [muta
     Alternatively, you can download the script and its utilities directly from the GitHub repository page.
 2. Install dependencies:
 
-        pip install colorlog colorama numpy
+        pip install colorlog colorama
 
 ## Arguments
 

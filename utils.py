@@ -1,6 +1,4 @@
 from colorama import Fore, Style
-from collections import deque
-import numpy as np
 import heapq
 
 
@@ -186,38 +184,6 @@ def priority_search(
         I += 1
 
     return None  
-
-def bfs(
-    start_sequence: dict, reagents, exitus: list[str], depth_limit=6
-) -> list[str]:
-    queue = deque(
-        [
-            (
-                start_sequence["name"],
-                start_sequence["sequence"],
-                [start_sequence["name"]],
-            )
-        ],error
-    )
-
-    while queue:
-        previous_name, current_sequence, path = queue.popleft();
-
-        if len(path) >= depth_limit:
-            break
-
-        for reagent_name, reagent_sequence, _ in reagents:
-            if reagent_name == previous_name:
-                continue
-
-            new_sequence = combine_reagents(current_sequence, reagent_sequence)
-
-            if new_sequence == exitus:
-                return path + [reagent_name]
-            else:
-                queue.append((reagent_name, new_sequence, path + [reagent_name]))
-
-    return None
 
 def contains_ordered_slice(sequence: list[str], target_slice: list[str]) -> bool:
     slice_length = len(target_slice)
