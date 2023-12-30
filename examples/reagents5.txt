@@ -1,0 +1,16 @@
+Exitus-1 W5 J1 C2 ZY ZA GQ JZ P4 BD TR
+Echo-1 AD P4 C2 BD PR
+Echo-2 GQ ZA BD ZY -ID -Y3 -X6 -CZ
+Echo-3 DC HF SJ W5 J1 ID -CZ -JZ
+Echo-4 PR X6 JZ GZ -DC
+Helicon-1 J1 X6 HF W5 -PR
+Helicon-2 C2 Y3 DC -SJ -GZ -HF -PR -BD
+Helicon-3 Y3 BD C2 GQ TR -J1 -CZ -DC -SJ
+Io-1 HF W5 P4 ZA BD JZ
+Io-2 C2 PR W5 ZY CZ -SJ -GQ
+Io-3 Y3 PR SJ -BD -AD -TR
+Ovid-1 ZA HF GQ -TR -BD
+Ovid-2 P4 GQ JZ TR
+Ovid-3 ZA ID Y3 DC BD -CZ
+Solis-1 GQ JZ P4 -Y3 -GZ -DC
+Solis-2 JZ GZ HF P4 C2 -W5 -PR -BD -Y3 

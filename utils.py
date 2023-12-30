@@ -148,9 +148,11 @@ def heuristic(current_sequence: list[str], target_sequence: list[str], depth: in
     return score
 
 def priority_search(
-    start_sequence: dict, reagents, exitus: list[str], depth_limit=15
+    start_sequence: dict, reagents, exitus: list[str], depth_limit=12
 ) -> list[str]:
     p_queue = []
+
+    I = 0
 
     heapq.heappush(
         p_queue,
@@ -166,11 +168,11 @@ def priority_search(
     while p_queue:
         priority, previous_name, current_sequence, previous_sequence, path = heapq.heappop(p_queue)
 
-        if len(path) >= depth_limit:
+        if len(path) >= depth_limit or I >= 2500:
             break
-
+        
         for reagent_name, reagent_sequence in reagents.items():
-            if reagent_name == previous_name or current_sequence == previous_sequence:
+            if reagent_name == previous_name:
                 continue
 
             new_sequence = combine_reagents(current_sequence, reagent_sequence)
@@ -180,6 +182,8 @@ def priority_search(
             else:
                 new_priority = heuristic(new_sequence, exitus, len(path + [reagent_name]))
                 heapq.heappush(p_queue, (-new_priority, reagent_name, new_sequence, current_sequence, path + [reagent_name]))
+        
+        I += 1
 
     return None  
 
@@ -215,23 +219,28 @@ def bfs(
 
     return None
 
+def contains_ordered_slice(sequence: list[str], target_slice: list[str]) -> bool:
+    slice_length = len(target_slice)
+    
+    for i in range(len(sequence) - slice_length + 1):
+        if sequence[i:i + slice_length] == target_slice:
+            return True
+    return False
 
 def get_viable_start_reagents(reagents: dict, exitus: list[str]) -> dict:
-    max_score = 0
-    viable_starts = {}
+    viable_starts = []
 
     for reagent_name, reagent_sequence in reagents.items():
         score = 0
-        i = 0
+        i = 1
 
-        while exitus[i] in reagent_sequence:
-            score += 1
+        while contains_ordered_slice(reagent_sequence, exitus[:i]):
+            score = i
             i += 1
 
-        if score > max_score:
-            max_score = score
-            viable_starts = {reagent_name: reagent_sequence}
-        elif score == max_score:
-            viable_starts[reagent_name] = reagent_sequence
+        if score > 0:
+            viable_starts.append((score, reagent_name, reagent_sequence))
+
+        viable_starts.sort(reverse=True, key=lambda x: x[0])
 
     return viable_starts

@@ -100,6 +100,7 @@ if __name__ == "__main__":
     logger.info(f'Removed {removed_reagents}')
 
     viable_start_reagents = get_viable_start_reagents(filtered_reagents, EXITUS)
+    logger.info(f"Viable starts {[reagent[1] for reagent in viable_start_reagents]}")
     if args.debug:
         logger.debug("Useful reagents:")
         printd(filtered_reagents)
@@ -107,7 +108,7 @@ if __name__ == "__main__":
     logger.info("Searching...")
     if args.start:
         if args.start not in filtered_reagents:
-            logger.error(f"Starter node {args.start} not found in reagents")
+            logger.critical(f"Starter node {args.start} not found in reagents")
             exit(1)
        
         start = {"name": args.start, "sequence": filtered_reagents[args.start]}
@@ -123,7 +124,7 @@ if __name__ == "__main__":
                 logger.info("Step by step:")
                 print_verbose_solution(reagents, path, EXITUS)
     else:
-        with concurrent.futures.ProcessPoolExecutor() as executor:
+        with concurrent.futures.ProcessPoolExecutor(max_workers=4) as executor:
             future_to_sequence = {
                 executor.submit(
                     priority_search,
@@ -132,7 +133,7 @@ if __name__ == "__main__":
                     EXITUS,
                     args.depth,
                 ): key
-                for key, value in viable_start_reagents.items()
+                for _, key, value in viable_start_reagents
             }
 
             if args.first:
@@ -145,7 +146,7 @@ if __name__ == "__main__":
                     try:
                         path = future.result()
                     except Exception as exc:
-                        logger.error(f"{key} generated an exception: {exc}")
+                        logger.critical(f"{key} generated an exception: {exc}")
                         exit(1)
                     
                     if path is not None:
@@ -166,7 +167,7 @@ if __name__ == "__main__":
                     try:
                         path = future.result()
                     except Exception as exc:
-                        logger.error(f"{key} generated an exception: {exc}")
+                        logger.critical(f"{key} generated an exception: {exc}")
                     else:
                         if path is None:
                             logger.warning(f"No solution found for starter node {key}")
