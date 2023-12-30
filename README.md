@@ -12,7 +12,7 @@ This solver is a CLI tool designed for quickly and efficiently solving the [muta
 
 1. Clone or download the repository from GitHub to your local machine. If you have Git installed, you can clone the repository using the following command:
         
-        git clone git@github.com:vm910/mutagen_solver.git
+        git clone https://github.com/vm910/mutagen_solver
 
     Alternatively, you can download the script and its utilities directly from the GitHub repository page.
 2. Install dependencies:
