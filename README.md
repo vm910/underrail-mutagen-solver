@@ -68,7 +68,7 @@ Example of running the solver with a combination of these arguments:
 
 ## Search method
 
-The solver employs a priority search, which proved to be much better than BFS. This method uses a [priority queue](https://docs.python.org/3/library/heapq.html) to manage and explore different combinations of reagents, focusing on the most promising paths first. Each potential combination of reagents, or state, is assigned a priority based on a heuristic function. The states with higher priority (i.e., closer to the goal) are explored first. The method also employs a safeguard, where if a solution is not found after 2500 iterations, it will terminate. This was added to prevent the search from going on indefinitely.
+The solver employs a priority search or "Best first search" as the scholars say, which proved much better than the other BFS (breadth first search). This method uses a [priority queue](https://docs.python.org/3/library/heapq.html) to manage and explore different combinations of reagents, focusing on the most promising paths first. Each potential combination of reagents, or state, is assigned a priority based on a heuristic function. The states with higher priority (i.e., closer to the goal) are explored first. The method also employs a safeguard, where if a solution is not found after 2500 iterations, it will terminate. This was added to prevent the search from going on indefinitely.
 
 ### Heuristic Function
 
