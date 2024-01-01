@@ -72,7 +72,7 @@ The solver employs a priority search or "Best first search" as the scholars say,
 
 ### Heuristic Function
 
-The heuristic function evaluates and scores each state based on its proximity to `Exitus`. It is based on the heuristic made by [Spilskinanke](https://github.com/Spilskinanke/Mutagen-Solver/blob/main/src/mutagen.adb). The function operates on the following principles:
+[The heuristic function](https://github.com/vm910/mutagen_solver/blob/master/utils.py#L134C1-L146C17) evaluates and scores each state based on its proximity to `Exitus`. It is based on the heuristic made by [Spilskinanke](https://github.com/Spilskinanke/Mutagen-Solver/blob/main/src/mutagen.adb#L144C1-L168C22). The function operates on the following principles:
 
 - Sequence Matching: The function scores states based on the alignment of their current sequence of atoms with the `Exitus` sequence. States with sequences that closely match the target (in the correct order) are given higher scores.
 
