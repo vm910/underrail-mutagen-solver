@@ -65,7 +65,7 @@ def combine_reagents(reagent1: list[str], reagent2: list[str]) -> list[str]:
     return r1 + r2
 
 
-def color_eliminated_atoms(reagent1: list[str], reagent2: list[str]):
+def color_diff_atoms(reagent1: list[str], reagent2: list[str]):
     color_values1 = []
     color_values2 = []
 
@@ -111,7 +111,7 @@ def print_verbose_solution(
             print(f"\t  {' '.join(map(str, exitus))}")
             print()
         else:
-            colored_reagent1, colored_reagent2 = color_eliminated_atoms(
+            colored_reagent1, colored_reagent2 = color_diff_atoms(
                 compound, reagents[solution[i]]
             )
             print(f" {i}.\t  {' '.join(map(str, colored_reagent1))}")
@@ -190,6 +190,7 @@ def contains_ordered_slice(sequence: list[str], target_slice: list[str]) -> bool
     for i in range(len(sequence) - slice_length + 1):
         if sequence[i:i + slice_length] == target_slice:
             return True
+            
     return False
 
 def get_viable_start_reagents(reagents: dict, exitus: list[str]) -> dict:
