@@ -136,8 +136,7 @@ def heuristic(current_sequence: list[str], target_sequence: list[str], depth: in
     index_c = 0
 
     for i, atom in enumerate(current_sequence):
-        target_index = i - index_c
-        if len(target_sequence) >= i and atom == target_sequence[target_index]:
+        if len(target_sequence) >= i and atom == target_sequence[i - index_c]:
             score += 3 / depth
         else:
             score -= 1 * depth
