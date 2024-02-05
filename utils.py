@@ -157,13 +157,12 @@ def priority_search(
             -heuristic(start_sequence["sequence"], exitus, 1),
             start_sequence["name"], 
             start_sequence["sequence"],
-            [],
             [start_sequence["name"]]
         )
     )
 
     while p_queue:
-        priority, previous_name, current_sequence, previous_sequence, path = heapq.heappop(p_queue)
+        _, previous_name, current_sequence, path = heapq.heappop(p_queue)
 
         if len(path) >= depth_limit or I >= 2500:
             break
@@ -178,7 +177,7 @@ def priority_search(
                 return path + [reagent_name]
             else:
                 new_priority = heuristic(new_sequence, exitus, len(path + [reagent_name]))
-                heapq.heappush(p_queue, (-new_priority, reagent_name, new_sequence, current_sequence, path + [reagent_name]))
+                heapq.heappush(p_queue, (-new_priority, reagent_name, new_sequence, path + [reagent_name]))
         
         I += 1
 
@@ -193,7 +192,7 @@ def contains_ordered_slice(sequence: list[str], target_slice: list[str]) -> bool
             
     return False
 
-def get_viable_start_reagents(reagents: dict, exitus: list[str]) -> dict:
+def get_viable_start_reagents(reagents: dict, exitus: list[str]) -> list:
     viable_starts = []
 
     for reagent_name, reagent_sequence in reagents.items():
