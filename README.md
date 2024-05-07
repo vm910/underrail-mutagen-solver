@@ -72,11 +72,4 @@ The solver employs a priority search or "Best first search" as the scholars say,
 
 ### Heuristic Function
 
-[The heuristic function](https://github.com/vm910/mutagen_solver/blob/master/utils.py#L134C1-L146C17) evaluates and scores each state based on its proximity to `Exitus`. It is based on the heuristic made by [Spilskinanke](https://github.com/Spilskinanke/Mutagen-Solver/blob/main/src/mutagen.adb#L144C1-L168C22). The function operates on the following principles:
-
-- Sequence Matching: The function scores states based on the alignment of their current sequence of atoms with the `Exitus` sequence. States with sequences that closely match the target (in the correct order) are given higher scores.
-
-- Penalty for Mismatches: The heuristic penalizes states that introduce atoms not present in the `Exitus` sequence or that are in the incorrect order, thus lowering their priority in the search queue.
-
-- Depth-Adaptive Scoring: The heuristic's scoring strategy adapts based on the depth of the search. Initially, the heuristic favors sequences that closely match the start of the `Exitus` sequence, with higher scores for matching atoms and lower penalties for mismatches. This encourages the solver to prioritize paths that are closely aligned with `Exitus` from the beginning. As the search progresses to greater depths, the scoring adapts by reducing the score increment for matching atoms and increasing the penalty for mismatches. This strategy proved helpful in encouraging the solver to eliminate bad atoms instead of just appending target atoms.
-
+[The heuristic function](https://github.com/vm910/mutagen_solver/blob/master/utils.py#L134C1-L146C17) evaluates and scores each state based on its proximity to `Exitus`. It is based on the heuristic made by [Spilskinanke](https://github.com/Spilskinanke/Mutagen-Solver/blob/main/src/mutagen.adb#L144C1-L168C22). This heuristic was modified to be more lenient at the start and then as the path builds up, it would heavily discourage mismatches.
