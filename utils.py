@@ -105,22 +105,22 @@ def print_verbose_solution(
 ) -> None:
     compound = [atom for atom in reagents[solution[0]] if atom[0] != "-"]
 
-    for i in range(0, len(solution)):
+    for i, s in enumerate(solution):
         if i == 0:
-            print(f" {i}.\t  {' '.join(map(str, exitus_difference(compound, exitus)))}")
-            print(f"\t  {' '.join(map(str, exitus))}")
+            print("{:<15}  {}".format(s, ' '.join(map(str, exitus_difference(compound, exitus)))))
+            print("{:<15}  {}".format('', ' '.join(map(str, exitus))))
             print()
         else:
             colored_reagent1, colored_reagent2 = color_diff_atoms(
                 compound, reagents[solution[i]]
             )
-            print(f" {i}.\t  {' '.join(map(str, colored_reagent1))}")
-            print(f"\t+ {' '.join(map(str, colored_reagent2))}")
+            print("{:<15}  {}".format('', ' '.join(map(str, colored_reagent1))))
+            print("{:<15}+ {}".format(s, ' '.join(map(str, colored_reagent2))))
 
             compound = combine_reagents(compound, reagents[solution[i]])
 
-            print(f"\t= {' '.join(map(str, exitus_difference(compound, exitus)))}")
-            print(f"\t  {' '.join(map(str, exitus))}")
+            print("{:<15}= {}".format('', ' '.join(map(str, exitus_difference(compound, exitus)))))
+            print("{:<15}  {}".format('', ' '.join(map(str, exitus))))
             print()
 
 
