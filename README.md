@@ -59,7 +59,7 @@ The solver accepts several command-line arguments that allow you to customize it
 
 - `--verbose` (Optional): If set, the program outputs a detailed step-by-step description of the solution process. This is useful for users who want to understand how a particular solution is reached. Example of a step by step output:
 
-  ![Mutagen Puzzle Example](imgs/2023-12-30_17-36.png "Mutagen Puzzle")
+  ![Mutagen Puzzle Example](imgs/image.png "Mutagen Puzzle")
 
 - `--start` (Optional): Allows you to specify a starting reagent for the search. If not set, the solver will choose the starting point based on its heuristic analysis. Use if you want to test specific starting points that aren't automatically chosen.
 

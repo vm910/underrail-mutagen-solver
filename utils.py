@@ -107,20 +107,20 @@ def print_verbose_solution(
 
     for i, s in enumerate(solution):
         if i == 0:
-            print("{:<15}  {}".format(s, ' '.join(map(str, exitus_difference(compound, exitus)))))
-            print("{:<15}  {}".format('', ' '.join(map(str, exitus))))
+            print(" {:<15}  {}".format(s, ' '.join(map(str, exitus_difference(compound, exitus)))))
+            print(" {:<15}  {}".format('', ' '.join(map(str, exitus))))
             print()
         else:
             colored_reagent1, colored_reagent2 = color_diff_atoms(
                 compound, reagents[solution[i]]
             )
-            print("{:<15}  {}".format('', ' '.join(map(str, colored_reagent1))))
-            print("{:<15}+ {}".format(s, ' '.join(map(str, colored_reagent2))))
+            print(" {:<15}  {}".format('', ' '.join(map(str, colored_reagent1))))
+            print(" {:<15}+ {}".format(s, ' '.join(map(str, colored_reagent2))))
 
             compound = combine_reagents(compound, reagents[solution[i]])
 
-            print("{:<15}= {}".format('', ' '.join(map(str, exitus_difference(compound, exitus)))))
-            print("{:<15}  {}".format('', ' '.join(map(str, exitus))))
+            print(" {:<15}= {}".format('', ' '.join(map(str, exitus_difference(compound, exitus)))))
+            print(" {:<15}  {}".format('', ' '.join(map(str, exitus))))
             print()
 
 
