@@ -5,17 +5,18 @@ This solver is a CLI tool designed for quickly and efficiently solving the [muta
 ## Requirements
 
 - Python 3
-    - colorlog
-    - colorama
+  - colorlog
+  - colorama
 
 ## Installation
 
-1. Clone or download the repository from GitHub to your local machine. If you have Git installed, you can clone the repository using the following command:
-        
+1.  Clone or download the repository from GitHub to your local machine. If you have Git installed, you can clone the repository using the following command:
+
         git clone https://github.com/vm910/mutagen_solver
 
     Alternatively, you can download the script and its utilities directly from the GitHub repository page.
-2. Install dependencies:
+
+2.  Install dependencies:
 
         pip install colorlog colorama
 
@@ -27,25 +28,27 @@ The solver accepts several command-line arguments that allow you to customize it
 
         --reagents path/to/reagents.txt
 
-    example of a reagents file:
-    ```
-        Exitus-1 WU JJ RJ LX RU IB LM RA D2 LS CI I5 DL IQ OY
-        Ovid-1 LX CW WU -RJ
-        Ovid-2 JJ P9 IQ LX RU -D2
-        Ovid-3 RJ CN IQ OC -RA -CI -LX
-        Echo-1 RU IB D2
-        Echo-2 P9 CI OY LS OC DL RJ -CW -IQ -WU
-        Echo-3 CN RU IB
-        Echo-4 IB D2 WU OY CW -RJ
-        Helicon-1 JJ D2 OY RJ LX CW -OC -IB
-        Helicon-2 ED JJ OY I5 P9 -LM -WU -CI
-        Helicon-3 CW D2 WU -IQ
-        Io-1 I5 IB IQ OY
-        Io-2 P9 CN I5 OC -LS
-        Io-3 RJ LM RA -OC -CN -D2
-        Solis-1 WU ED RA IB -JJ -I5
-        Solis-2 D2 LS CI I5 DL -OY -CW
-    ```
+  example of a reagents file:
+
+  ```
+      Exitus-1 WU JJ RJ LX RU IB LM RA D2 LS CI I5 DL IQ OY
+      Ovid-1 LX CW WU -RJ
+      Ovid-2 JJ P9 IQ LX RU -D2
+      Ovid-3 RJ CN IQ OC -RA -CI -LX
+      Echo-1 RU IB D2
+      Echo-2 P9 CI OY LS OC DL RJ -CW -IQ -WU
+      Echo-3 CN RU IB
+      Echo-4 IB D2 WU OY CW -RJ
+      Helicon-1 JJ D2 OY RJ LX CW -OC -IB
+      Helicon-2 ED JJ OY I5 P9 -LM -WU -CI
+      Helicon-3 CW D2 WU -IQ
+      Io-1 I5 IB IQ OY
+      Io-2 P9 CN I5 OC -LS
+      Io-3 RJ LM RA -OC -CN -D2
+      Solis-1 WU ED RA IB -JJ -I5
+      Solis-2 D2 LS CI I5 DL -OY -CW
+  ```
+
 - `--depth` (Optional): Sets the depth limit for the search. The default value is 15. Increasing the depth may increase the time taken to find a solution.
 
         --depth 20
@@ -56,7 +59,7 @@ The solver accepts several command-line arguments that allow you to customize it
 
 - `--verbose` (Optional): If set, the program outputs a detailed step-by-step description of the solution process. This is useful for users who want to understand how a particular solution is reached. Example of a step by step output:
 
-    ![Mutagen Puzzle Example](imgs/2023-12-30_17-36.png "Mutagen Puzzle")
+  ![Mutagen Puzzle Example](imgs/2023-12-30_17-36.png "Mutagen Puzzle")
 
 - `--start` (Optional): Allows you to specify a starting reagent for the search. If not set, the solver will choose the starting point based on its heuristic analysis. Use if you want to test specific starting points that aren't automatically chosen.
 
