@@ -67,7 +67,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "--start", type=str, help="The starting node for the BFS.", required=False
     )
-    
+
     args = parser.parse_args()
 
     logging_level = logging.DEBUG if args.debug else logging.INFO
@@ -92,7 +92,7 @@ if __name__ == "__main__":
 
     logger.info("Filtering useless reagents...")
     filtered_reagents, removed_reagents = filter_useless_reagents(reagents, EXITUS)
-    logger.info(f'Removed {removed_reagents}')
+    logger.info(f"Removed {removed_reagents}")
 
     viable_start_reagents = get_viable_start_reagents(filtered_reagents, EXITUS)
     logger.info(f"Viable starts {[reagent[1] for reagent in viable_start_reagents]}")
@@ -105,7 +105,7 @@ if __name__ == "__main__":
         if args.start not in filtered_reagents:
             logger.critical(f"Starter node {args.start} not found in reagents")
             exit(1)
-       
+
         start = {"name": args.start, "sequence": filtered_reagents[args.start]}
         logger.info(f"Starting from {args.start}")
         path = priority_search(start, filtered_reagents, EXITUS, args.depth)
@@ -143,7 +143,7 @@ if __name__ == "__main__":
                     except Exception as exc:
                         logger.critical(f"{key} generated an exception: {exc}")
                         exit(1)
-                    
+
                     if path is not None:
                         logger.info(
                             f"Solution found for starter node {key}: [{' '.join(map(str, path))}]"

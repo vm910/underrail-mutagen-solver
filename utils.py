@@ -5,9 +5,11 @@ import heapq
 def printd(d: dict) -> None:
     for key, value in d.items():
         colored_values = [
-            f"{Fore.RED}{atom}{Style.RESET_ALL}"
-            if atom.startswith("-")
-            else f"{Fore.GREEN}{atom}{Style.RESET_ALL}"
+            (
+                f"{Fore.RED}{atom}{Style.RESET_ALL}"
+                if atom.startswith("-")
+                else f"{Fore.GREEN}{atom}{Style.RESET_ALL}"
+            )
             for atom in value
         ]
         print(f"\t{key}: {' '.join(map(str, colored_values))}")
@@ -18,7 +20,7 @@ def flatten(l: list[list]) -> list:
     return [item for sublist in l for item in sublist]
 
 
-def parse_reagents(path: str) -> dict:
+def parse_reagents(path: str) -> tuple[dict, list[str]]:
     with open(path, "r") as f:
         reagents = f.readlines()
         reagents = [reagent.strip() for reagent in reagents]
@@ -29,7 +31,7 @@ def parse_reagents(path: str) -> dict:
         return mut_dict, EXITUS
 
 
-def filter_useless_reagents(reagents: dict, EXITUS: list[str]) -> dict:
+def filter_useless_reagents(reagents: dict, EXITUS: list[str]) -> tuple[dict, list]:
     removed_reagents = []
 
     while True:
@@ -65,7 +67,9 @@ def combine_reagents(reagent1: list[str], reagent2: list[str]) -> list[str]:
     return r1 + r2
 
 
-def color_diff_atoms(reagent1: list[str], reagent2: list[str]):
+def color_diff_atoms(
+    reagent1: list[str], reagent2: list[str]
+) -> tuple[list[str], list[str]]:
     color_values1 = []
     color_values2 = []
 
@@ -86,7 +90,7 @@ def color_diff_atoms(reagent1: list[str], reagent2: list[str]):
     return color_values1, color_values2
 
 
-def exitus_difference(compound: list[str], exitus: list[str]) -> int:
+def exitus_difference(compound: list[str], exitus: list[str]) -> list[str]:
     color_values = []
 
     for i, atom in enumerate(compound):
@@ -107,21 +111,27 @@ def print_verbose_solution(
 
     for i, s in enumerate(solution):
         if i == 0:
-            print(" {:<15}  {}".format(s, ' '.join(map(str, exitus_difference(compound, exitus)))))
-            print(" {:<15}  {}".format('', ' '.join(map(str, exitus))))
-            print()
+            print(
+                " {:<15}  {}".format(
+                    s, " ".join(map(str, exitus_difference(compound, exitus)))
+                )
+            )
+            print(" {:<15}  {}\n".format("", " ".join(map(str, exitus))))
         else:
             colored_reagent1, colored_reagent2 = color_diff_atoms(
                 compound, reagents[solution[i]]
             )
-            print(" {:<15}  {}".format('', ' '.join(map(str, colored_reagent1))))
-            print(" {:<15}+ {}".format(s, ' '.join(map(str, colored_reagent2))))
+            print(" {:<15}  {}".format("", " ".join(map(str, colored_reagent1))))
+            print(" {:<15}+ {}".format(s, " ".join(map(str, colored_reagent2))))
 
             compound = combine_reagents(compound, reagents[solution[i]])
 
-            print(" {:<15}= {}".format('', ' '.join(map(str, exitus_difference(compound, exitus)))))
-            print(" {:<15}  {}".format('', ' '.join(map(str, exitus))))
-            print()
+            print(
+                " {:<15}= {}".format(
+                    "", " ".join(map(str, exitus_difference(compound, exitus)))
+                )
+            )
+            print(" {:<15}  {}\n".format("", " ".join(map(str, exitus))))
 
 
 def validate_reagents(reagents: dict, exitus: list[str]) -> None:
@@ -131,7 +141,10 @@ def validate_reagents(reagents: dict, exitus: list[str]) -> None:
         if atom not in atom_pool:
             raise ValueError(f"Exitus atom {atom} not found in reagents")
 
-def heuristic(current_sequence: list[str], target_sequence: list[str], depth: int) -> float:
+
+def heuristic(
+    current_sequence: list[str], target_sequence: list[str], depth: int
+) -> float:
     score = 0.0
     index_c = 0
 
@@ -144,6 +157,7 @@ def heuristic(current_sequence: list[str], target_sequence: list[str], depth: in
 
     return score
 
+
 def priority_search(
     start_sequence: dict, reagents: dict, exitus: list[str], depth_limit: int = 15
 ) -> list[str]:
@@ -155,10 +169,10 @@ def priority_search(
         p_queue,
         (
             -heuristic(start_sequence["sequence"], exitus, 1),
-            start_sequence["name"], 
+            start_sequence["name"],
             start_sequence["sequence"],
-            [start_sequence["name"]]
-        )
+            [start_sequence["name"]],
+        ),
     )
 
     while p_queue:
@@ -166,33 +180,42 @@ def priority_search(
 
         if len(path) >= depth_limit or I >= 2500:
             break
-        
+
         for reagent_name, reagent_sequence in reagents.items():
             if reagent_name == previous_name:
                 continue
 
             new_sequence = combine_reagents(current_sequence, reagent_sequence)
-     
+
             if new_sequence == exitus:
                 return path + [reagent_name]
             else:
-                new_priority = heuristic(new_sequence, exitus, len(path + [reagent_name]))
-                heapq.heappush(p_queue, (-new_priority, reagent_name, new_sequence, path + [reagent_name]))
-        
+                new_priority = heuristic(
+                    new_sequence, exitus, len(path + [reagent_name])
+                )
+                heapq.heappush(
+                    p_queue,
+                    (-new_priority, reagent_name, new_sequence, path + [reagent_name]),
+                )
+
         I += 1
 
-    return None  
+    return None
+
 
 def contains_ordered_slice(sequence: list[str], target_slice: list[str]) -> bool:
     slice_length = len(target_slice)
-    
+
     for i in range(len(sequence) - slice_length + 1):
-        if sequence[i:i + slice_length] == target_slice:
+        if sequence[i : i + slice_length] == target_slice:
             return True
-            
+
     return False
 
-def get_viable_start_reagents(reagents: dict, exitus: list[str]) -> list:
+
+def get_viable_start_reagents(
+    reagents: dict, exitus: list[str]
+) -> list[tuple[int, str, list[str]]]:
     viable_starts = []
 
     for reagent_name, reagent_sequence in reagents.items():
