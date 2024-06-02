@@ -160,7 +160,7 @@ def heuristic(
 
 def priority_search(
     start_sequence: dict, reagents: dict, exitus: list[str], depth_limit: int = 15
-) -> list[str]:
+) -> list[str] | None:
     p_queue = []
 
     I = 0
