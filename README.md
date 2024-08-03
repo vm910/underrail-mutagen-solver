@@ -75,4 +75,4 @@ The solver employs a priority search or "Best first search" as the scholars say,
 
 ### Heuristic Function
 
-[The heuristic function](https://github.com/vm910/mutagen_solver/blob/master/utils.py#L134C1-L146C17) evaluates and scores each state based on its proximity to `Exitus`. It is based on the heuristic made by [Spilskinanke](https://github.com/Spilskinanke/Mutagen-Solver/blob/main/src/mutagen.adb#L144C1-L168C22). This heuristic was modified to be more lenient at the start and then as the path builds up, it would heavily discourage mismatches.
+[The heuristic function](https://github.com/vm910/underrail-mutagen-solver/blob/b6d5c0dd4d8244c6aa5bc10b013caaaccb35a5d6/utils.py#L145C1-L159C1) evaluates and scores each state based on its proximity to `Exitus`. It is based on the heuristic made by [Spilskinanke](https://github.com/Spilskinanke/Mutagen-Solver/blob/main/src/mutagen.adb#L144C1-L168C22). This heuristic was modified to be more lenient at the start and then as the path builds up, it would heavily discourage mismatches.
